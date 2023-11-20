@@ -63,7 +63,7 @@ def main():
             file.write('EMAIL_SCHEDULER_HOUR=12\n')
             file.write('EMAIL_SCHEDULER_MINUTES=0\n')
             file.write('\n')
-            file.write('TARGET_LANGUAGE="Japenese"\n')
+            file.write('TARGET_LANGUAGE="Japanese"\n')
 
     # install required packages
     print("Installing required packages...")
