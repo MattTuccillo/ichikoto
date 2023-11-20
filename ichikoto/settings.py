@@ -158,6 +158,15 @@ if scheduler_minutes is not None and scheduler_minutes.isdigit() and 0 <= int(sc
 else:
     EMAIL_SCHEDULER_MINUTES = 0
 
+# Grabs the users target language
+language = os.getenv("TARGET_LANGUAGE")
+available_languages = ["Japanese", "Spanish"]
+
+if language.capitalize().strip() in available_languages:
+    TARGET_LANGUAGE = language.capitalize().strip()
+else:
+    TARGET_LANGUAGE = available_languages[0]
+
 
 # Logging backend settings
 LOGGING = {
