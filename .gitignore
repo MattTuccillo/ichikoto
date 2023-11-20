@@ -7,3 +7,4 @@ db.sqlite3
 /static
 .env
 logfile.log
+venv/
