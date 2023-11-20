@@ -25,17 +25,17 @@ def send_prompt(manual_mode=False, simulate_error=None):
             return {"choices": [{"message": {"content": "Sample response for testing."}}]}
 
         content_message = f"Request:\n"
-        content_message += f"Word in Japanese: Give me a useful word to know"
-        word_objects = Word.objects.filter(language="Japanese")
+        content_message += f"Word in {settings.TARGET_LANGUAGE}: Give me a useful word to know"
+        word_objects = Word.objects.filter(language=settings.TARGET_LANGUAGE)
         word_list = [word.word for word in word_objects]
         if word_list:
             word_string = ', '.join(word_list)
             content_message += f" that is not in this list: [{word_string}]"
-        content_message += f".\nDefinition in Japanese: Give the definition of the word in Japanese with furigana.\n"
-        content_message += f"Context Sentence in Japanese: Offer a sentence using the word in Japanese with furigana.\n"
-        content_message += f"\nResponse Structure:\nWord: [In Japanese]\n"
-        content_message += f"Definition: [In Japanese with furigana]\n"
-        content_message += f"Context Sentence: [In Japanese with furigana]\n"
+        content_message += f".\nDefinition in {settings.TARGET_LANGUAGE}: Give the definition of the word in {settings.TARGET_LANGUAGE} with furigana (if applicable).\n"
+        content_message += f"Context Sentence in {settings.TARGET_LANGUAGE}: Offer a sentence using the word in {settings.TARGET_LANGUAGE} with furigana (if applicable).\n"
+        content_message += f"\nResponse Structure:\nWord: [In {settings.TARGET_LANGUAGE}]\n"
+        content_message += f"Definition: [In {settings.TARGET_LANGUAGE} with furigana (if applicable)]\n"
+        content_message += f"Context Sentence: [In {settings.TARGET_LANGUAGE} with furigana (if applicable)]\n"
         content_message += f"Translation:\nWord in English:\n"
         content_message += f"Definition in English:\n"
         content_message += f"Context Sentence in English:"
