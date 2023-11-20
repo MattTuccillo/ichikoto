@@ -1,4 +1,5 @@
 from ..models import Word
+from django.conf import settings
 import logging
 import re
 
@@ -18,11 +19,11 @@ def extract_word(response_text):
         return None
 
 
-def store_word(response_text, language="Japanese"):
+def store_word(response_text):
     try:
         word = extract_word(response_text)
         if word:
-            new_word = Word(word=word, language=language)
+            new_word = Word(word=word, language=settings.TARGET_LANGUAGE)
             new_word.save()
             logger.info(f"The word '{word}' has been successfully stored.")
         else:
