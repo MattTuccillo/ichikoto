@@ -6,8 +6,21 @@ import openai
 logger = logging.getLogger(__name__)
 client = openai.OpenAI()
 
+def get_language_specific_instructions():
+    language = settings.TARGET_LANGUAGE
+
+    if language == 'Japanese':
+        instructions = ' with furigana'
+    else:
+        instructions = ''
+
+    return instructions
+
 
 def send_prompt(manual_mode=False, simulate_error=None):
+    language = settings.TARGET_LANGUAGE
+    language_specific_instructions = get_language_specific_instructions()
+
     try:
         # simulate errors if in manual mode
         if manual_mode:
@@ -25,22 +38,23 @@ def send_prompt(manual_mode=False, simulate_error=None):
             return {"choices": [{"message": {"content": "Sample response for testing."}}]}
 
         content_message = f"Request:\n"
-        content_message += f"Word in {settings.TARGET_LANGUAGE}: Give me a useful word to know"
-        word_objects = Word.objects.filter(language=settings.TARGET_LANGUAGE)
+        content_message += f"Word in {language}: Give me a useful word to know"
+        word_objects = Word.objects.filter(language=language)
         word_list = [word.word for word in word_objects]
         if word_list:
             word_string = ', '.join(word_list)
             content_message += f" that is not in this list: [{word_string}]"
-        content_message += f".\nDefinition in {settings.TARGET_LANGUAGE}: Give the definition of the word in {settings.TARGET_LANGUAGE} with furigana (if applicable).\n"
-        content_message += f"Context Sentence in {settings.TARGET_LANGUAGE}: Offer a sentence using the word in {settings.TARGET_LANGUAGE} with furigana (if applicable).\n"
-        content_message += f"\nResponse Structure:\nWord: [In {settings.TARGET_LANGUAGE}]\n"
-        content_message += f"Definition: [In {settings.TARGET_LANGUAGE} with furigana (if applicable)]\n"
-        content_message += f"Context Sentence: [In {settings.TARGET_LANGUAGE} with furigana (if applicable)]\n"
+        content_message += f".\nDefinition in {language}: Give the definition of the word in {language}{language_specific_instructions}.\n"
+        content_message += f"Context Sentence in {language}: Offer a sentence using the word in {language}{language_specific_instructions}.\n"
+        content_message += f"\nResponse Structure:\nWord: [In {language}]\n"
+        content_message += f"Definition: [In {language}{language_specific_instructions}]\n"
+        content_message += f"Context Sentence: [In {language}{language_specific_instructions}]\n"
         content_message += f"Translation:\nWord in English:\n"
         content_message += f"Definition in English:\n"
         content_message += f"Context Sentence in English:"
 
         logger.info("Making API call to fetch word information")
+        logger.info(content_message)
 
         response = client.chat.completions.create(
             messages=[
